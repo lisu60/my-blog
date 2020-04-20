@@ -1,5 +1,5 @@
 +++
-title = "UTS Csec CTF: Missing"
+title = "CSEC CTF: Missing"
 date = 2020-04-12T01:26:00+10:00
 lastmod = 2020-04-12T01:26:00+10:00
 tags = [
@@ -24,6 +24,8 @@ draft = true
 # Original challenge
 
 [here](https://ctf.utscyber.org/challenges#Missing)
+
+![Challenge Missing](/img/chell-missing.png)
 
 # Beginning
 
