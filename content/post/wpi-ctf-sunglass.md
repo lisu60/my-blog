@@ -10,10 +10,12 @@ readingTime = true  # show reading time after article date
 toc = true
 comments = true
 justify = false  # text-align: justify;
-single = true  # display as a single page, hide navigation on bottom, like as about page.
+single = false  # display as a single page, hide navigation on bottom, like as about page.
 license = ""  # CC License
 draft = false
 +++
+
+# Challenge Description
 
 ![sunglass-2](/img/sunglass-2.png)
 
