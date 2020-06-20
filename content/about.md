@@ -7,6 +7,8 @@ aliases = ["about-us","contact"]
 author = "Taylor"
 +++
 
+<script src="https://tryhackme.com/badge/44001"></script>
+
 This is Taylor's blog :)
 
 I'm currently a postgraduate student in the course Master of Information Technology at University of Technology Sydney.
