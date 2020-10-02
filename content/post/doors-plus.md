@@ -1,5 +1,5 @@
 +++
-title = "CSEC CTF: Doors Plussssss"
+title = "CSEC CTF: Doors Plus"
 date = 2020-07-10T10:38:34+10:00
 lastmod = 2020-07-10T10:38:34+10:00
 tags = ["csec", "web"]
