@@ -7,7 +7,6 @@ aliases = ["about-us","contact"]
 author = "Taylor"
 +++
 
-<script src="https://tryhackme.com/badge/44001"></script>
 
 This is Taylor's blog :)
 
@@ -19,4 +18,7 @@ I'm currently a postgraduate student in the course Master of Information Technol
 
   * PGP encrypted mails are more than welcome. [My PGP public key](https://keys.openpgp.org/search?q=me@tay1or.li).
 * Twitter: [@lisu60](https://twitter.com/lisu60)
-* Instagram: [@lisu60](https://instagram.com/lisu60)
+* LinkedIn: [Su Li](https://www.linkedin.com/in/su-li-4b6027a9/)
+
+
+<script src="https://tryhackme.com/badge/44001"></script>
