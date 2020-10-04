@@ -1,7 +1,7 @@
 +++
 title = "Jack - TryHackMe"
 date = 2020-10-03T00:17:00+10:00
-lastmod = 2020-10-03T00:17:00+10:00
+lastmod = 2020-10-05T00:10:57+11:00
 tags = ["TryHackMe", "WordPress", "WPscan", "Python", "Python module"]
 categories = ["CTF"]
 imgs = []
@@ -20,6 +20,8 @@ draft = false
 This is a room from [TryHackMe](https://tryhackme.com). 
 
 [Link to the room](https://tryhackme.com/room/jack)
+
+If you have any questions, or want to discuss anything with me, please leave a comment or find me through methods listed in [About Page](/about)
 
 # Recon
 
@@ -79,6 +81,8 @@ I'll turn over all these stones one by one, starting with static ones such as `/
 
 ![readme](/img/thm-jack/website-readme.png)
 
+All other paths either requires login, or provide nothing interesting as well. So far it's pretty much what I can do with the website, without any particularly interesting discoveries.
+
 # Vulnerability Scan
 
 Since I've already have some key information about the attack surface (the WordPress server), now it might be a good time to run a Nessus scan. To do this, I selected "Web Application Tests", and put our target domain name in to "Targets" field.
@@ -105,23 +109,23 @@ I read the hint provided by this room:
 
 ![hint 1](/img/thm-jack/hint1.png)
 
-"and don't use tools (ure_other_roles)". I actually went to check on what `ure_other_roles` is, and turns out it's and exploitable plugin, which I didn't see from the scan reports above. So "don't use tools" must mean brute force the password.
+I actually went to check on what `ure_other_roles` is, and turns out it's and exploitable plugin, which I didn't see from the scan reports above and won't be exploitable until we have some valid credentials. So "don't use tools" must mean bruteforcing the password.
 
-# Password Bruteforce
+# Password Bruteforcing
 
-So I saved the usernames I found into `users.txt` and ran
+So I saved the usernames I found into `users.txt` and ran a password bruteforcing with `rockyou.txt`:
 
 ```bash
 wpscan --url http://jack.thm -P ../../rockyou.txt -U users.txt -t 20
 ```
 
-After leave it running for 15 minutes I began to doubt. A challenge involving brute-force normally won't require this long time. I am either using a wrong wordlist, or on the wrong track. And the progress bar remained nothing because it's too big a wordlist.
+After leave it running for 15 minutes I began to doubt. A challenge involving bruteforcing normally won't require this long time. I am either using a wrong wordlist, or on the wrong track. The progress bar even remained unchanged during the 15 minutes because it's too big a wordlist.
 
 I took a look in the forum, and somebody mentioned [fast track wordlist](https://github.com/trustedsec/social-engineer-toolkit/blob/master/src/fasttrack/wordlist.txt). So I decided to have a try on this one. I downloaded and saved it as `fasttrack.txt`, and ran
 
 
 ```bash
-wpscan --url http://jack.thm -P ../../rockyou.txt -U users.txt -t 20
+wpscan --url http://jack.thm -P ../../fasttrack.txt -U users.txt -t 20
 ```
 
 And this time we were able to find a combination! (Geez, how would I ever know this if it was not people talking about this wordlist)
@@ -136,7 +140,7 @@ With this, we can now log into WordPress, and hopefully exploit some escalation.
 
 Cool! We are in. But we are not an admin. Maybe now is the time where the `ure_other_roles` hint comes in place.
 
-[I found a blog](https://windsorwebdeveloper.com/dc-6-vulnhub-walkthrough/) which mentioned how to exploit this argument. It is done by modifying the POST request when updating user profile.
+[I found a blog](https://windsorwebdeveloper.com/dc-6-vulnhub-walkthrough/) which mentioned how to exploit this POST argument. It is done by modifying the POST request when updating user profile.
 
 So I turned burp interception on:
 
@@ -184,7 +188,7 @@ There's another interesting file `reminder.txt`. The content of this file is lis
 
 Well, at this stage I didn't know much about what this reminder talks about yet. Based on this, I guess the next step would be something about misconfigured file permission. Let's keep looking around.
 
-With the clue of "backups" mentioned above, I checked the `/var/backups` directory, and found a file with very dangerous permissions, which looks like a RSA private key:
+With the clue of "backups" mentioned above, I checked the `/var/backups` directory, and found a file which looks like a RSA private key with very dangerous permissions:
 
 ![backups](/img/thm-jack/backups.png)
 
@@ -202,10 +206,10 @@ Then I tried if I can login to any user on the target machine. And yes, turns ou
 
 # Local Escalation
 
-Now that we've got a SSH session, it would be much easier to perform a local enumeration. First, upload `LinEnum.sh` script:
+Now that we've got a SSH session, it would be much easier to perform a local enumeration. First, upload `LinEnum.sh` script from my local machine:
 
 ```bash
-localmachin$ scp -i id_rsa ../../LinEnum.sh jack@jack.thm:
+local-machine$ scp -i id_rsa ../../LinEnum.sh jack@jack.thm:
 ```
 
 And then on the target machine:
@@ -224,11 +228,11 @@ Then the hint under the title came to my notice:
 
 What kind of Python module would be vulnerable for escalation?
 
-So I thought, it would be either a vulnerable Python module installed on this machine, or we are gonna perform a module hijack on some Python program run with root permission.
+So I thought, it would be either a vulnerable Python module installed on this machine, or we are gonna perform a module hijacking on some Python program run with root permission.
 
 Then I first tried to research if there are such vulnerable modules. Didn't find anything applicable. 
 
-Next, I tried to find somewher to perform module hijacking. Since the local enumeration found no SUID files, then the program to hijack is most likely run by cron. 
+Next, I tried to find somewher to perform module hijacking. Since the local enumeration found no expoitable SUID files, then the program to hijack is most likely run by cron. 
 
 So I tried to investigate Python programs running on this machine. To do this, I used [pspy](https://github.com/DominicBreuker/pspy). And this time, the result was exciting: there is a Python script getting run every 2 minutes:
 
@@ -260,20 +264,21 @@ They can be edited by users in the `family` group. I then checked the current us
 
 ![id](/img/thm-jack/jack-id.png)
 
-Guess what? We are in the `family` group!
+Guess what? We are `family`!
 
-So we actually can edit `/usr/lib/python2.7/os.py` directly, even simpler than hijacking bullshit.
+So we actually can directly edit `/usr/lib/python2.7/os.py`, even simpler than the hijacking bullshit.
 
-Then there are plenty of ways we can read root's flag. What I actually did is appending these code at the end of `os.py`:
+Now then there are countless ways we can read root's flag. What I actually did is appending these reverse shell code at the end of `os.py`:
 
 ![root sheel](/img/thm-jack/root-shell.jpg)
 
 and on my local machine, ran
 
 ```bash
-nc -lvnp 8889
+local-machine$ nc -lvnp 8889
 ```
 
-After waiting a while, when the script gets run again, we are in as root!
+After waiting a while for the next run of the script, we are in as root!
 
 ![root](/img/thm-jack/root-flag.png)
+
