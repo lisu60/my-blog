@@ -2,7 +2,7 @@
 title = "Wonderland - TryHackMe Box Walkthrough"
 date = 2020-06-13T01:29:18+10:00
 lastmod = 2020-06-13T01:29:18+10:00
-tags = ["TryHackMe", "Escalation"]
+tags = ["TryHackMe", "Escalation", "Python Module Hijack", "PATH Exploit"]
 categories = ["CTF"]
 imgs = []
 cover = "/img/wonderland/wonderland0.png"  # image show on top
@@ -220,7 +220,7 @@ I don't wanna spoil the fun. If you are fairly farmiliar with Python you should 
 import random
 ```
 
-Funny that the syntex for importing a system package and importing another .py file from project are the same. What if we create a `random.py` in the home directory (surely we have priviledge to do this)? Will the interpreter import the system one, or this one we just made?
+Funny that the syntax for importing a system package and importing another .py file from project are the same. What if we create a `random.py` in the home directory (surely we have priviledge to do this)? Will the interpreter import the system one, or this one we just made?
 
 To confirm that, I did a bit research and found [this article](https://rastating.github.io/privilege-escalation-via-python-library-hijacking/) talking about Python library hijacking. The important part is the directories and their priority that Python searches for the package to import:
 
@@ -240,7 +240,7 @@ import pty
 pty.spawn('/bin/bash')
 ```
 
-And let's run the Python script once more (as `rabbit`):
+And let's run `walrus_and_the_carpenter.py` once more (as `rabbit`):
 
 ![visit-rabbit](/img/wonderland/wonderland-visit-rabbit.png)
 
@@ -270,9 +270,9 @@ So we can easily infer that this part in the red brackets generated the messages
 
 Most interesing thing among them is the line in the red rectangle. This shows that somewhere inside this program, it runs a command in shell. And it used the `date` command without specifying an absolute path.
 
-We can create a executable file called `date` inside `/tmp` directory, and add `/tmp` to the beginning of `PATH` variable. Then we can execute whatever we want as another user by running `./teaParty`.
+We can create a executable file called `date` inside `/tmp` directory, and prepend `/tmp` to the beginning of `PATH` variable. The payload inside the `/tmp/date` file is the commands we want to execute as the user which is set in the `teaParty` progrom with the SUID permission. We can then execute whatever we want as that user by running `./teaParty`.
 
-So first thing let's check which user's priviledge we can get by doing this.
+So first thing, let's check which user's priviledge we are about to get by setting the payload as `whoami` command:
 
 ![tea party whoami](/img/wonderland/wonderland-teaparty-whoami.png)
 
