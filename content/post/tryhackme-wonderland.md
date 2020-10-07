@@ -1,11 +1,11 @@
 +++
-title = "Wonderland - TryHackMe Box Walkthrough"
+title = "Wonderland - TryHackMe"
 date = 2020-06-13T01:29:18+10:00
 lastmod = 2020-06-13T01:29:18+10:00
 tags = ["TryHackMe", "Escalation", "Python Module Hijack", "PATH Exploit"]
 categories = ["CTF"]
 imgs = []
-cover = "/img/wonderland/wonderland0.png"  # image show on top
+cover = "https://i.imgur.com/rhvJ8ft.jpg"  # image show on top
 readingTime = true  # show reading time after article date
 toc = true
 comments = true
