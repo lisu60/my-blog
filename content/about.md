@@ -10,7 +10,13 @@ author = "Taylor"
 
 This is Taylor's blog :)
 
-I'm currently a postgraduate student in the course Master of Information Technology at University of Technology Sydney.
+I'm currently a postgraduate student studying for  Master of Information Technology at University of Technology Sydney.
+
+I am also working as a cybersecurity intern.
+
+# Certification
+
+* eLearSecurity Junior Penetration Tester (eJPT). [Certification available here](https://members.elearnsecurity.com/exams/a8ff51d8-81f8-4fca-8bfc-ba6a38d92046/certificate).
 
 # Contact me
 
