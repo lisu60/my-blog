@@ -27,15 +27,15 @@ If you have any questions, or want to discuss anything with me, please leave a c
 
 First thing first, add domain name to `/etc/hosts` as described:
 
-![hosts](/img/thm-jack/hosts.png)
+![hosts](hosts.png)
 
 As usual, do a port scan:
 
-![nmap all ports](/img/thm-jack/nmap-all-ports.png)
+![nmap all ports](nmap-all-ports.png)
 
 We found ports 22 and 80 open on this host. Then the next thing would be doing a fingerprint scan on these ports:
 
-![nmap ports fingerprint](/img/thm-jack/nmap-ports-fingerprint.png)
+![nmap ports fingerprint](nmap-ports-fingerprint.png)
 
 So it's a OpenSSH server, and a Apache web server. The website might be built with WordPress.
 
@@ -49,37 +49,37 @@ Okay. Let's go and see what we can find in the website.
 
 Looking at the frontpage, 1 article is listed. Except that, no more interesting links are present.
 
-![frontpage](/img/thm-jack/website-frontpage.png)
+![frontpage](website-frontpage.png)
 
 On this article page, all the links present point this page itself. Besides, there is a comment form.
 
-![article](/img/thm-jack/website-article.png)
+![article](website-article.png)
 
 Let's try leaving a reply here:
 
-![reply](/img/thm-jack/website-reply.png)
+![reply](website-reply.png)
 
 Seems our reply is held for moderation:
 
-![mod](/img/thm-jack/website-reply-waiting-mod.png)
+![mod](website-reply-waiting-mod.png)
 
 One more thing, let me check `robots.txt`:
 
-![robots](/img/thm-jack/website-robots.png)
+![robots](website-robots.png)
 
 Let's go back and look at `gobuster`. It has already come with some interesting results:
 
-![gobuster results](/img/thm-jack/gobuster-results.png)
+![gobuster results](gobuster-results.png)
 
 I'll turn over all these stones one by one, starting with static ones such as `/license.txt` and `/readme.html`, then dynamic, WordPress-related ones.
 
 `/license.txt` seems just a license comes with WordPress, not quite informative:
 
-![license](/img/thm-jack/website-license.png)
+![license](website-license.png)
 
 `/readme.html` seems also a default file coming with WordPress:
 
-![readme](/img/thm-jack/website-readme.png)
+![readme](website-readme.png)
 
 All other paths either requires login, or provide nothing interesting as well. So far it's pretty much what I can do with the website, without any particularly interesting discoveries.
 
@@ -87,13 +87,13 @@ All other paths either requires login, or provide nothing interesting as well. S
 
 Since I've already have some key information about the attack surface (the WordPress server), now it might be a good time to run a Nessus scan. To do this, I selected "Web Application Tests", and put our target domain name in to "Targets" field.
 
-![nessus](/img/thm-jack/nessus-web-app.png)
+![nessus](nessus-web-app.png)
 
 This scan took quite a long time. Maybe I should have refine and customise it a bit.
 
 Anyway, the scan reported that this WordPress server is vulnerable to user name enumeration:
 
-![user enum](/img/thm-jack/nessus-wp-username-enum.png)
+![user enum](nessus-wp-username-enum.png)
 
 So now we have several usernames:
 
@@ -103,11 +103,11 @@ So now we have several usernames:
 
 Next, to conduct a more spcific examination on WordPress, I ran `wpscan` against this server. This scan shows no plugin on this server, and a brief research on this WordPress version didn't show any feasible exploitation for now (All need authentication or are XSS exploitation, and would be infeasible for now because neither I have a valid credentials nor are other people accessing this server)
 
-![vulns](/img/thm-jack/vulns.png)
+![vulns](vulns.png)
 
 I read the hint provided by this room:
 
-![hint 1](/img/thm-jack/hint1.png)
+![hint 1](hint1.png)
 
 I actually went to check on what `ure_other_roles` is, and turns out it's and exploitable plugin, which I didn't see from the scan reports above and won't be exploitable until we have some valid credentials. So "don't use tools" must mean bruteforcing the password.
 
@@ -130,11 +130,11 @@ wpscan --url http://jack.thm -P ../../fasttrack.txt -U users.txt -t 20
 
 And this time we were able to find a combination! (Geez, how would I ever know this if it was not people talking about this wordlist)
 
-![credentials](/img/thm-jack/user-credentials.png)
+![credentials](user-credentials.png)
 
 With this, we can now log into WordPress, and hopefully exploit some escalation. Let's navigate to `/wp-admin.php` and login.
 
-![dashboard](/img/thm-jack/admin-dashboard.png)
+![dashboard](admin-dashboard.png)
 
 # Become WordPress Admin
 
@@ -144,19 +144,19 @@ Cool! We are in. But we are not an admin. Maybe now is the time where the `ure_o
 
 So I turned burp interception on:
 
-![intercept](/img/thm-jack/burp-intercept.png)
+![intercept](burp-intercept.png)
 
 Then clicked "Update Profile" in the Profile tab:
 
-![update profile](/img/thm-jack/update-profile.png)
+![update profile](update-profile.png)
 
 Then when burp catches this request, I appended `&ure_other_roles=administrator` to the request arguments and forwarded the request:
 
-![modify request](/img/thm-jack/modify-request.png)
+![modify request](modify-request.png)
 
 And voila! We are admin now:
 
-![become admin](/img/thm-jack/become-admin.png)
+![become admin](become-admin.png)
 
 # Foothold
 
@@ -164,21 +164,21 @@ Now that we can mess with plugins, next thing came to my mind was to upload a we
 
 I searched in Metasploit, and found exploit `unix/webapp/wp_admin_shell_upload`, and configured it as follow:
 
-![msf options](/img/thm-jack/msf-options.png)
+![msf options](msf-options.png)
 
 And ran `exploit`.
 
 After waiting a short while, we got a meterpreter connection:
 
-![meterpreter](/img/thm-jack/meterpreter-shell.png)
+![meterpreter](meterpreter-shell.png)
 
 Now we got a foothold, and by retrieving `/etc/passwd` we can see a user called jack:
 
-![passwd](/img/thm-jack/passwd.png)
+![passwd](passwd.png)
 
 Then I listed jack's home directory, found that we can read the user's flag:
 
-![user flag](/img/thm-jack/user-flag.png)
+![user flag](user-flag.png)
 
 # A Better Shell
 
@@ -190,9 +190,9 @@ Well, at this stage I didn't know much about what this reminder talks about yet.
 
 With the clue of "backups" mentioned above, I checked the `/var/backups` directory, and found a file which looks like a RSA private key with very dangerous permissions:
 
-![backups](/img/thm-jack/backups.png)
+![backups](backups.png)
 
-![id_rsa](/img/thm-jack/id_rsa.png)
+![id_rsa](id_rsa.png)
 
 So I saved this file to my local machine, and set the permissions on this file to `600`
 
@@ -202,7 +202,7 @@ chmod 600 id_rsa
 
 Then I tried if I can login to any user on the target machine. And yes, turns out we can:
 
-![ssh jack](/img/thm-jack/ssh-jack.png)
+![ssh jack](ssh-jack.png)
 
 # Local Escalation
 
@@ -224,7 +224,7 @@ But this local enumeration didn't bring up anything interesting. I got stuck for
 
 Then the hint under the title came to my notice:
 
-![title hint](/img/thm-jack/title-hint.png)
+![title hint](title-hint.png)
 
 What kind of Python module would be vulnerable for escalation?
 
@@ -236,17 +236,17 @@ Next, I tried to find somewher to perform module hijacking. Since the local enum
 
 So I tried to investigate Python programs running on this machine. To do this, I used [pspy](https://github.com/DominicBreuker/pspy). And this time, the result was exciting: there is a Python script getting run every 2 minutes:
 
-![statuscheck](/img/thm-jack/statuscheck.png)
+![statuscheck](statuscheck.png)
 
 So I immediately went to check this file, see if I can module-hijack.
 
-![checker](/img/thm-jack/checker.png)
+![checker](checker.png)
 
 Basically, this program imports `os` module, grabs the content from the local webserver, and appends the respond to `output.log`.
 
 In order to perform module hijack, I can write some Python code and save to `/opt/statuscheck/os.py`. But, uh... Seems I cannot write to this directory:
 
-![no-write](/img/thm-jack/no-write.png)
+![no-write](no-write.png)
 
 I must need some other method to do this.
 
@@ -258,11 +258,11 @@ ls -al /usr/lib/python2.7
 
 and found that the permissions on these files are quite funny:
 
-![os perm](/img/thm-jack/os-py-perm.png)
+![os perm](os-py-perm.png)
 
 They can be edited by users in the `family` group. I then checked the current user's groups:
 
-![id](/img/thm-jack/jack-id.png)
+![id](jack-id.png)
 
 Guess what? We are `family`!
 
@@ -270,7 +270,7 @@ So we actually can directly edit `/usr/lib/python2.7/os.py`, even simpler than t
 
 Now then there are countless ways we can read root's flag. What I actually did is appending these reverse shell code at the end of `os.py`:
 
-![root sheel](/img/thm-jack/root-shell.jpg)
+![root sheel](root-shell.jpg)
 
 and on my local machine, ran
 
@@ -280,5 +280,5 @@ local-machine$ nc -lvnp 8889
 
 After waiting a while for the next run of the script, we are in as root!
 
-![root](/img/thm-jack/root-flag.png)
+![root](root-flag.png)
 

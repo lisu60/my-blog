@@ -25,14 +25,14 @@ This is a challenge from the UTS Cyber Security Society (CSEC) Semester-long CTF
 
 Link: [here](https://ctf.utscyber.org/challenges#Missing)
 
-![Challenge Missing](/img/chell-missing.png)
+![Challenge Missing](chell-missing.png)
 
 # Poking around
 
 So the description gave us a URL ([http://128.199.239.130:8007](http://128.199.239.130:8007)). No reason not to start here, right? And we got:
 
 
-![Just Apache](/img/just-apache.png)
+![Just Apache](just-apache.png)
 
 Hmmm... Seems a newly set up Apache server, running a Ubuntu machine, without even serving a proper page. Not quite informative. Nothing in the page source, either :(
 
@@ -42,7 +42,7 @@ Next thing came up to me was scanning the port:
 ```bash
 nmap -sC -sV -p8007 128.199.239.130
 ```
-![nmap](/img/nmap8007.png)
+![nmap](nmap8007.png)
 
 Here! We found something interesting: a git repository! Let's try pull this repository down.
 
@@ -50,11 +50,11 @@ Here! We found something interesting: a git repository! Let's try pull this repo
 
 Let's try `git clone` this repository:
 
-![Git clone fails](/img/git-clone-fails.png)
+![Git clone fails](git-clone-fails.png)
 
 Uh oh. Seems it doesn't work the normal way. But it should do no harm if we check the [URL](http://128.199.239.130:8007/.git) with our browser.
 
-![.git directory](/img/8007.git.png)
+![.git directory](8007.git.png)
 
 Looking good. The directory is served in its raw structure. This means we can spider everything down in the worst case. So why not make a spider now ;)
 
@@ -123,11 +123,11 @@ Hooray! Now we got the repository. My zsh even told me we are on `master` branch
 
 First of all, let's see the commit history of course.
 
-![Git log](/img/gitlog.png)
+![Git log](gitlog.png)
 
 The third commit says 'hide flag'. If it is THE FLAG we are looking for (apprently), then we should check what it has hidden. Let's go checkout the Initial Commit.
 
-![Checkout fatal](/img/checkout-fatal.png)
+![Checkout fatal](checkout-fatal.png)
 
 Hmmm... Didn't go well. But what does this error message mean? 
 
@@ -137,8 +137,8 @@ Turns out the `.git/` directory is a hidden directory which `git` creates when y
 
 Then this would be easy. Let what belongs to `.git/` go to `.git/`, and make our 'missing' directory its parent.
 
-![Move .git](/img/move-git.png)
+![Move .git](move-git.png)
 
 Now everything is normal and familiar again. Let's finish what was to be done.
 
-![Flag retrieved](/img/flag-retrieved.png)
+![Flag retrieved](flag-retrieved.png)

@@ -5,7 +5,7 @@ lastmod = 2020-04-18T23:27:46+10:00
 tags = ["WPICTF2020"]
 categories = [ "CTF"]
 imgs = []
-cover = "/img/smsh.png"  # image show on top
+cover = "smsh.png"  # image show on top
 readingTime = true  # show reading time after article date
 toc = true
 comments = true
@@ -33,7 +33,7 @@ ssh smsh@smsh.wpictf.xyz
 
 Give the password when asked.
 
-![login](/img/smsh-login.png)
+![login](smsh-login.png)
 
 A prompt, hmmmm. Doesn't look a normal shell, but it's a shell. Okay, let's see what we have now.
 
@@ -41,7 +41,7 @@ A prompt, hmmmm. Doesn't look a normal shell, but it's a shell. Okay, let's see 
 ls -la
 ```
 
-![ls](/img/smsh-ls.png)
+![ls](smsh-ls.png)
 
 Whaaaaaaaat? We have found the `flag` already!? Easy 200 points!
 
@@ -49,13 +49,13 @@ Whaaaaaaaat? We have found the `flag` already!? Easy 200 points!
 cat flag
 ```
 
-![cat](/img/smsh-cat.png)
+![cat](smsh-cat.png)
 
 Strange. The shell was hanging after I entered the command.
 
 That's fine. Let's try other ways to read the file.
 
-![other commands](/img/smsh-other-cmd.png)
+![other commands](smsh-other-cmd.png)
 
 Not even `string` or `grep`. When I tried `less flag` it even messed the console up, and I had to fire up a new terminal tab. I was wrong. It's not easy 200 points.
 
@@ -65,7 +65,7 @@ I finally got lucky with `base64` command.
 base64 flag
 ```
 
-![base64](/img/smsh-base64.png)
+![base64](smsh-base64.png)
 
 Seems it managed to read and encode that file. Let's copy the encoded text and decode it on our own machine.
 
@@ -74,6 +74,6 @@ echo -n "ZWNobyAiV1BJe1NVY2ttb3JlU29mdHdhcmVOMzNkejJHM1RpdFRvZ2VUSEVSfSIK" | bas
 ```
 
 
-![decode](/img/smsh-decode.png)
+![decode](smsh-decode.png)
 
 Curious. It's a shell command in that file. Anyway, we've retrieved the flag.

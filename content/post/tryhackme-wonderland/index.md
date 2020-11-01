@@ -32,7 +32,7 @@ First thing, no doubt, we gotta know which ports are open on this box. This is h
 nmap -sC -sV <your box ip>
 ```
 
-![nmap](/img/wonderland/wonderland-nmap.png)
+![nmap](wonderland-nmap.png)
 
 
 An ssh and a HTTP server.
@@ -54,15 +54,15 @@ Now you can leave gobuster running in the background while you work on your brow
 
 Put your box IP address into your browser, this is what we see:
 
-![wonderland1](/img/wonderland/wonderland1.png)
+![wonderland1](wonderland1.png)
 
 Not quite informative looked this way. We shall check the page source.
 
-![wonderland2](/img/wonderland/wonderland2.png)
+![wonderland2](wonderland2.png)
 
 So Mr. Rabbit here is a .jpg image. When seeing .jpg I'd always give it a try with `steghide`:
 
-![steghide](/img/wonderland/wonderland-steghide.png)
+![steghide](wonderland-steghide.png)
 
 In case you wonder the passphrase I entered: Nothing. Empty passphrase. Under this empty passphrase hides a file *hint.txt*, which says
 
@@ -72,11 +72,11 @@ It seems simply repeating the title on the frontpage. But what does it mean?
 
 Meanwhile, gobuster has found something interesting. We left it running in background, still remember?
 
-![gobuster](/img/wonderland/wonderland-gobuster.png)
+![gobuster](wonderland-gobuster.png)
 
 The "/img" directory we've already seen. The "/r" directory is especially curious. Let's try type it into URL and see where we go.
 
-![r](/img/wonderland/wonderland-r.png)
+![r](wonderland-r.png)
 
 It asks me to "keep going". I think I have got a theory about the previous hint... 
 
@@ -95,17 +95,17 @@ Here's what I got:
 >
 > "Then it doesn't matter which way you go," said the Cat.
 
-![r](/img/wonderland/wonderland-r.png)
+![r](wonderland-r.png)
 
-![ra](/img/wonderland/wonderland-ra.png)
+![ra](wonderland-ra.png)
 
-![rab](/img/wonderland/wonderland-rab.png)
+![rab](wonderland-rab.png)
 
-![rabb](/img/wonderland/wonderland-rabb.png)
+![rabb](wonderland-rabb.png)
 
-![rabbi](/img/wonderland/wonderland-rabbi.png)
+![rabbi](wonderland-rabbi.png)
 
-![rabbit](/img/wonderland/wonderland-rabbit.png)
+![rabbit](wonderland-rabbit.png)
 
 
 
@@ -113,13 +113,13 @@ Now we've exhausted clues we got. What now?
 
 Well, page sources are always worth a shot. Let's check the source of `/r/a/b/b/i/t` now.
 
-![rabbit source](/img/wonderland/wonderland-rabbit-src.png)
+![rabbit source](wonderland-rabbit-src.png)
 
 It's a hidden paragraph! Such colon separated format could be a username-password pair, i.e. a login credential. 
 
 Would it be a credential we can use to login to SSH? (Yes. Turns out it is.)
 
-![ssh](/img/wonderland/wonderland-ssh.png)
+![ssh](wonderland-ssh.png)
 
 Woowee! We are in the Wonderland now!
 
@@ -129,9 +129,9 @@ Woowee! We are in the Wonderland now!
 
 Let's first look at the home directory.
 
-![alice home](/img/wonderland/wonderland-alice-home.png)
+![alice home](wonderland-alice-home.png)
 
-![home](/img/wonderland/wonderland-home.png)
+![home](wonderland-home.png)
 
 Hmm? `root.txt` is here. Well, since we can't do anything to it, let's leave it alone for now. 
 
@@ -180,13 +180,13 @@ for i in range(10):
 
 Although it is very long, the things it does are quite simple. The core is the last few lines: If you run this script, it simply print 10 random lines from this poem to stdout.
 
-![random lines](/img/wonderland/wonderland-random-lines.png)
+![random lines](wonderland-random-lines.png)
 
 One thing I would always try in priviledge escalation is `sudo`. We shall first check what command we can run with sudo:
 
 `sudo -l`
 
-![alice sudo](/img/wonderland/wonderland-alice-sudo.png)
+![alice sudo](wonderland-alice-sudo.png)
 
 Interesting! The Python script here in our home directory, we can run it as another user.
 
@@ -242,7 +242,7 @@ pty.spawn('/bin/bash')
 
 And let's run `walrus_and_the_carpenter.py` once more (as `rabbit`):
 
-![visit-rabbit](/img/wonderland/wonderland-visit-rabbit.png)
+![visit-rabbit](wonderland-visit-rabbit.png)
 
 Voila! We now have a rabbit shell!
 
@@ -250,7 +250,7 @@ Voila! We now have a rabbit shell!
 
 Now we can see what's in rabbit's home directory.
 
-![rabbit's home](/img/wonderland/wonderland-rabbit-home.png)
+![rabbit's home](wonderland-rabbit-home.png)
 
 Ah! Sticky bits. I like it.
 
@@ -264,7 +264,7 @@ Here, we use `strings` command to extract printable strings from a binary file.
 strings teaParty
 ```
 
-![tea party](/img/wonderland/wonderland-teaparty.png)
+![tea party](wonderland-teaparty.png)
 
 So we can easily infer that this part in the red brackets generated the messages shown in the previous image. 
 
@@ -274,7 +274,7 @@ We can create a executable file called `date` inside `/tmp` directory, and prepe
 
 So first thing, let's check which user's priviledge we are about to get by setting the payload as `whoami` command:
 
-![tea party whoami](/img/wonderland/wonderland-teaparty-whoami.png)
+![tea party whoami](wonderland-teaparty-whoami.png)
 
 Now we've got Mr. Hatter's priviledge, let's see what's under hatter's home directory.
 
@@ -289,11 +289,11 @@ echo
 
 And do the trick again:
 
-![ls hatter](/img/wonderland/wonderland-ls-hatter2.png)
+![ls hatter](wonderland-ls-hatter2.png)
 
 Inside the password.txt file is the password of hatter. Now we have a full shell as hatter by SSH into the box.
 
-![hatter shell](/img/wonderland/wonderland-hatter-shell.png)
+![hatter shell](wonderland-hatter-shell.png)
 
 
 # Root
@@ -302,15 +302,15 @@ As we found nothing doable inside hatter's home directory, now it's time to do s
 
 By reading the report carefully, I found this interesting:
 
-![hatter enum](/img/wonderland/wonderland-hatter-enum.png)
+![hatter enum](wonderland-hatter-enum.png)
 
-![hatter perl](/img/wonderland/wonderland-hatter-perl.png)
+![hatter perl](wonderland-hatter-perl.png)
 
 The `perl` interpreter executable has the `setuid` capability. And we now, as hatter, has the permission to run it. This means we can get anyone's priviledge in this box as hatter.
 
 I'm not quite familiar with perl, but I found [this amazing guide](https://gtfobins.github.io/gtfobins/perl/).
 
-![root](/img/wonderland/wonderland-root.png)
+![root](wonderland-root.png)
 
 Hooray! Now loot the flags!
 

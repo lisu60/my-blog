@@ -22,35 +22,35 @@ This is a challenge from the UTS Cyber Security Society (CSEC) Semester-long CTF
 
 Link: [here](https://ctf.utscyber.org/challenges#Doors%20Plus)
 
-![Challenge Doors Plus](/img/doors-plus/challenge.png)
+![Challenge Doors Plus](challenge.png)
 
 # Let's look around
 
 So the challenge starts with a URL (not the YouTube link!). Go to that link we see:
 
-![Epic Doors Plus No Fuss API](/img/doors-plus/doors-plus-api.png)
+![Epic Doors Plus No Fuss API](doors-plus-api.png)
 
 Seems this website provides a set of web API. And our objective, as described, is to create a door named "Backdoor".
 
 Firstly I tried to send a GET request to `/api/door` with Postman:
 
-![Forbidden](/img/doors-plus/forbidden.png)
+![Forbidden](forbidden.png)
 
 I got a 403 error. Seems the authentication is a real deal. Well then, let's become a legal user and get authenticated, by calling `/api/user/register` and `/api/user/login`.
 
 Register:
 
-![Register](/img/doors-plus/register.png)
+![Register](register.png)
 
 Login:
 
-![Login](/img/doors-plus/login.png)
+![Login](login.png)
 
 So by sending my credentials in JSON format to `/api/user/register` and then to `/api/user/login` I got myself a token. With this token I should be able to access the APIs need authentication.
 
 Well let's try `/api/door` again with this token:
 
-![Doors](/img/doors-plus/doors.png)
+![Doors](doors.png)
 
 Cool! There are already some doors, and this API call seems to list them all.
 
@@ -58,31 +58,31 @@ Then I wanted to try adding a door. According to the API reference, I need to pr
 
 The token seems to be a [JWT](https://jwt.io). So I tried to decode the token and see what it contains:
 
-![JWT](/img/doors-plus/jwt.png)
+![JWT](jwt.png)
 
 So my `userId` is 8121, and I'm not a admin. Now we can try adding a door:
 
-![Door created](/img/doors-plus/door-created.png)
+![Door created](door-created.png)
 
 It returned with the info of the door I just created. And let's run a GET on this API again:
 
-![Doors 2](/img/doors-plus/doors2.png)
+![Doors 2](doors2.png)
 
 Our newly created doors is listed!
 
 Next I tried `/api/user/:id`. First I give it a go with my own ID:
 
-![ttya](/img/doors-plus/ttya.png)
+![ttya](ttya.png)
 
 Yes, it's me. It's my username, and I'm not a admin.
 
 Now I should try another ID. We can try all other IDs seen in the door list:
 
-![john2](/img/doors-plus/john2.png)
+![john2](john2.png)
 
 ID 4592
 
-![user123](/img/doors-plus/user123.png)
+![user123](user123.png)
 
 ID 123
 
@@ -111,11 +111,11 @@ for i in range(100000):
 
 After several minutes of numbers flashing, I found there are much more users than I imagined, and something interesting showed up:
 
-![Users](/img/doors-plus/users.png)
+![Users](users.png)
 
 Funny you mentioned that. What would happen if I look into user ID 696969? Let's find out:
 
-![Admin](/img/doors-plus/admin.png)
+![Admin](admin.png)
 
 Hah! 696969 is the admin!
 
@@ -131,6 +131,6 @@ Wait a sec!
 
 So. Ready, aim, fire!
 
-![Backdoor](/img/doors-plus/backdoor.png)
+![Backdoor](backdoor.png)
 
 Haha! We got it!

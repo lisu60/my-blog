@@ -5,7 +5,7 @@ lastmod = 2020-04-20T22:19:21+10:00
 tags = [ "WPICTF2020"]
 categories = [ "CTF"]
 imgs = []
-cover = "/img/john-cena.png"  # image show on top
+cover = "john-cena.png"  # image show on top
 readingTime = true  # show reading time after article date
 toc = true
 comments = true
@@ -29,7 +29,7 @@ draft = false
 
 The first clue for this challenge is a URL to a PNG image. This is how it looks:
 
-![braille](/img/john-cena-braille.png)
+![braille](john-cena-braille.png)
 
 Apparently, it's something written in Braille. We need to do an "OCR" of this picture first, and then decode it.
 
@@ -167,17 +167,17 @@ As I read from Wikipedia, many different Latin alphabets of different languages 
 
 Googling 'braille to english' and I found a website: [dcode.fr](https://www.dcode.fr/braille-alphabet) (This website is awesome. It can even decode Sheikah symbols from Legend of Zelda: Breath of the Wild). So I pasted extracted Braille above, but doesn't seem right.
 
-![decode1](/img/john-cena-decode1.png)
+![decode1](john-cena-decode1.png)
 
 I noticed that in this result about half of the lines end with an undecoded ⠼ character. Can it be this character should be decoded with the following character, but saw a line wrap instead? It's worth a try to decode without LF characters.
 
-![decode2](/img/john-cena-decode2.png)
+![decode2](john-cena-decode2.png)
 
 This time it seems to make much better sense. These are hexadecimal numbers. So let's try further decoding this.
 
 First step is always to check if it contains printable characters.
 
-![decode3](/img/john-cena-decode3.png)
+![decode3](john-cena-decode3.png)
 
 It shows 'ELF' at the head of this byte strings. Very good chance it's a executable file on Linux! Definitely I should save this to a file and try running it.
 
@@ -194,6 +194,6 @@ chmod +x braille.bin
 ./braille.bin
 ```
 
-![flag](/img/john-cena-flag.png)
+![flag](john-cena-flag.png)
 
 That's the flag!
