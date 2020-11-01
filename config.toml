@@ -62,3 +62,7 @@ showTags = true             # /tags/
 title = "About"
 url = "/about/"
 
+[[params.nav.custom]]
+title = "RSS"
+url = "/post/index.xml"
+
