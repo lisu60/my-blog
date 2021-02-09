@@ -42,6 +42,8 @@ Funny that I only got this flag at the last because it wasn't in a `flag{xxxx}` 
 
 The file in the link can be found [here](jetty.s)
 
+## Overview
+
 Having a glance of the code, we can see that the program is basically asking a user input, and check the user input against a piece of encrypted data, character by character.
 
 We can see that this part is saving the encrypted text into memory:
@@ -92,16 +94,43 @@ Within the loop, the most important part is the following:
 
 This part is where the encryption is applied to a user input character (before it's compared with the encrypted data in memory).
 
+## Encryption
+
 Firstly, the program multiplies the character by 137 and save the result into `eax`(`imul eax, eax, 137`).
 
+The use of the `cdq` command here confused me for a while. After digging the internet for a while, I discovered that the `cdq` instruction will populate `edx` register with either 0x00000000 or 0xFFFFFFFF according to the sign bit of `eax`.
 
-The use of the `cdq` command here confused me for a while. After digging the internet for a while, I discovered that the `cdq` instruction will [populate `edx` register with either 0x00000000 or 0xFFFFFFFF](https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq) according to the sign bit of `eax`.
+[Here's a explanation](https://www.aldeid.com/wiki/X86-assembly/Instructions/cdq) on how `cdq` works which helped me while I was solving this challenge.
 
-In case of `edx` is 0xFFFFFFFF, the `shr edx, 24` instruction will make it 0x000000FF. Since it's only the lowest 8 bits of `eax` that we care about (because `movzx eax, al` is gonna truncate it), `add eax, edx` is equivalent to minus 1 from `al`, and `sub eax, edx` is equivalent to adding 1 to `al`. Thus those 5 instructions is nothing but truncate `eax` to the lowest byte; While in case of `edx` is 0x00000000, it's just adding 0, substracting 0 and truncating, which make it the same thing as in the former case.
+So after `cdq` instruction, the value of `edx` would be either 0xFFFFFFFF or 0x00000000.
 
-So we can conclude that this "encryption" is simply **multiplying the character by 137 and truncate in into 1 byte**.
+In case of `edx` is 0xFFFFFFFF, the following `shr edx, 24` instruction will make it 0x000000FF. Since it's only the lowest 8 bits of `eax` that we care about (because `movzx eax, al` is gonna truncate it, more on this later), `add eax, edx` is equivalent to minus 1 from `al`, and `sub eax, edx` is equivalent to adding 1 to `al`. Thus those 5 instructions is nothing but truncate `eax` to the lowest byte.
 
-Knowing this, we can make a table of ASCII values and the values when they are encrypted. By reverse-applying this table we can decrypt the message.
+While in case of `edx` is 0x00000000, it's just adding 0, substracting 0 and truncating, which make it the same thing as in the former case. 
+
+Actually, in case of this challenge, the result of `cdq` command should always be `edx = 0x00000000` if your input are all ASCII characters (bytes with values less than 127, i.e. sign bit is 0).
+
+The following illustrates the process of a character being encrypted, assuming the character is `{` (0x7B):
+
+```asm
+        movzx   eax, BYTE PTR [rbp-48+rax] ; eax = 0x0000007B '{'
+        movsx   eax, al                    ; eax = 0x0000007B '{'
+        imul    eax, eax, 137              ; eax = 0x000041D3
+        cdq                                ; edx = 0x00000000
+        shr     edx, 24                    ; edx = 0x00000000
+        add     eax, edx                   ; eax = 0x000041D3, adding 0, eax remains unchanged
+        movzx   eax, al                    ; eax = 0x000000D3, TRUNCATED to the lowest 8 bits
+        sub     eax, edx                   ; eax = 0x000000D3, substracting 0, eax remains unchanged
+        mov     DWORD PTR [rbp-8], eax     ; saving eax to a variable for later comparison
+```
+
+
+
+## Solution
+
+With the observation above we can conclude that this "encryption" is equivalent to simply **multiplying the character by 137 and truncate in into 1 byte**.
+
+Knowing this, we can map ASCII values to the values when they are encrypted. By reverse-applying this mapping to the cipher text we can decrypt the message.
 
 The solution Python script:
 
