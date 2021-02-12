@@ -1,7 +1,7 @@
 +++
-title = "牛年灯谜 CTF Writeup"
-date = 2021-02-12T11:11:44+11:00
-lastmod = 2021-02-12T11:11:44+11:00
+title = "牛年灯谜 CTF Writeup Part 1"
+date = 2021-02-13T2:39:00+11:00
+lastmod = 2021-02-13T2:39:00+11:00
 tags = ["Year of Ox"]
 categories = ["CTF"]
 imgs = []
@@ -12,7 +12,7 @@ comments = true
 justify = false  # text-align: justify;
 single = true  # display as a single page, hide navigation on bottom, like as about page.
 license = ""  # CC License
-draft = true
+draft = false
 +++
 
 
@@ -133,7 +133,7 @@ uggcf://lrnebsbk.gnl1be.yv/vaqrk.ugzy
 
 上述过程是我在已经直到答案的情况下写出的。你的具体的观察和猜想的过程可能不尽相同。但是这不要紧，因为你总可以想办法验证你的猜想。不要害怕去验证一些看起来有点傻的猜想，解谜的过程本就是如此，猜错了也不必嘲笑你自己 :)
 
-想到了字母替换，首先要尝试的自然是[恺撒加密](https://en.wikipedia.org/wiki/Caesar_cipher)。恺撒加密很简单，就是讲整个字母表按顺序错位，将明文中的字母誊写为错位后的字母。比如当设置错位数为3的时候，明文中的字母 A 在密文中就写成 D，明文中的 B 在密文中写成 E，以此类推。如此，例如明文的句子为：
+想到了字母替换，首先要尝试的自然是[恺撒加密](https://en.wikipedia.org/wiki/Caesar_cipher)。恺撒加密很简单，就是将整个字母表按顺序错位，将明文中的字母誊写为错位后的字母。比如当设置错位数为3的时候，明文中的字母 A 在密文中就写成 D，明文中的 B 在密文中写成 E，以此类推。如此，例如明文的句子为：
 
 The quick brown fox jumped over the lazy dog
 
@@ -141,7 +141,7 @@ The quick brown fox jumped over the lazy dog
 
 Wkh txlfn eurzq ira mxpshg ryhu wkh odcb grj
 
-不难看出，恺撒加密的可能性相当容易穷尽。你只须最多尝试25种可能就能找到明文（或者发现目标密文使用的不是恺撒加密）。而对于已经知道部分密文所对应的明文的情况（例如此题中 `uggcf` -> `https`），只需要一个些简单地算数你就可以知道错位的位数。很显然，在我们的例子中这个数字是13。
+不难看出，恺撒加密的可能性相当容易穷尽。你只须最多尝试25种可能就能找到明文（或者发现目标密文使用的不是恺撒加密）。而对于已经知道部分密文所对应的明文的情况（例如此题中 `uggcf` -> `https`），只需要一些简单地算数你就可以知道错位的位数。很显然，在我们的例子中这个数字是13。
 
 当你把上一步中得到的文本中的所有字母都错位13位之后，你会得到：
 
