@@ -1,9 +1,9 @@
 +++
 title = "牛年灯谜 CTF Writeup Part 2"
-date = 2021-02-13T02:35:42+11:00
-lastmod = 2021-02-13T02:35:42+11:00
-tags = []
-categories = []
+date = 2021-02-14T05:12:00+11:00
+lastmod = 2021-02-14T05:12:00+11:00
+tags = ["Year of Ox"]
+categories = ["CTF"]
 imgs = []
 cover = ""  # image show on top
 readingTime = true  # show reading time after article date
