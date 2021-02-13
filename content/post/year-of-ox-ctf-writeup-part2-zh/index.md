@@ -12,7 +12,7 @@ comments = true
 justify = false  # text-align: justify;
 single = true  # display as a single page, hide navigation on bottom, like as about page.
 license = ""  # CC License
-draft = true
+draft = false
 +++
 
 [Part 1](https://tay1or.li/post/year-of-ox-ctf-writeup-zh/)
