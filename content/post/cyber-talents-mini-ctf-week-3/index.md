@@ -1,5 +1,5 @@
 +++
-title = "Cyber Talents Mini Ctf Week 3"
+title = "Cyber Talents Mini CTF Week 3"
 date = 2021-02-21T22:59:01+11:00
 lastmod = 2021-02-21T22:59:01+11:00
 tags = ['CyberTalents', 'Mini CTF']
