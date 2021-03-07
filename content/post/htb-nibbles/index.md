@@ -2,8 +2,8 @@
 title = "Nibbles - HackTheBox"
 date = 2021-03-07T23:54:03+11:00
 lastmod = 2021-03-07T23:54:03+11:00
-tags = []
-categories = []
+tags = ["HackTheBox", "Metasploit", "Nibbleblog", "Python scripting"]
+categories = ["Boot2Root"]
 imgs = []
 cover = "https://www.hackthebox.eu/storage/avatars/344a8f99e8f7dddfed764f791e2731df.png"  # image show on top
 readingTime = true  # show reading time after article date
