@@ -10,9 +10,9 @@ author = "Taylor"
 
 This is Taylor's blog :)
 
-I'm currently a postgraduate student studying for  Master of Information Technology at University of Technology Sydney.
+I'm currently a postgraduate student studying for  Master of Information Technology at University of Technology Sydney. I play CTF mainly with [skateboarding dog](https://ctftime.org/team/140575)
 
-I am also working as a cybersecurity intern.
+I currently work as a Junior Penetration Tester.
 
 # Certification
 
@@ -23,8 +23,8 @@ I am also working as a cybersecurity intern.
 * [me@tay1or.li](mailto:me@tay1or.li) 
 
   * PGP encrypted mails are more than welcome. [My PGP public key](https://keys.openpgp.org/search?q=me@tay1or.li).
-* Twitter: [@lisu60](https://twitter.com/lisu60)
-* LinkedIn: [Su Li](https://www.linkedin.com/in/su-li-4b6027a9/)
+* Twitter: [@TeleTYpewriterA](https://twitter.com/TeleTYpewriterA)
+* LinkedIn: [Su (Taylor) Li](https://www.linkedin.com/in/cybersectaylor/)
 
 
 <script src="https://tryhackme.com/badge/44001"></script>
